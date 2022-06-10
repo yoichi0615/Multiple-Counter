@@ -1,68 +1,83 @@
-<div>
+<div class=text-center>
 	<h1>Multiple Counter</h1>
-	{#if options}
-		{#each options as option, i}
-		<span>{i}</span>	
-			<!-- <svelte:component this={option.component} on:updateTotalCount={updateTotalCount} index={option.index} on:deleteCounter={deleteCounter}/> -->
-			<Counter on:addTotalCount={addTotalCount} index={i} options={options} on:deleteCounter={deleteCounter} on:sutractTotalCount={sutractTotalCount} on:updateTitle={updateTitle}/>
+	{#if contents}
+		{#each contents as content, i}	
+		<Counter on:addTotalCount={addTotalCount} index={i} title={content.title} on:deleteCounter={deleteCounter} on:sutractTotalCount={sutractTotalCount} on:updateTitle={updateTitle} on:resetTotalCount={resetTotalCount}/>
 		{/each}
 	{/if}
-	<AddNewCounter options={options} on:addNewCounter={addNewCounter}/>
+	<AddNewCounter on:addNewCounter={addNewCounter}/>
 	
 	<p>
 		title lists:
-		{#each options as option, i}
-		{option.title + ','}
+		{#each contents as content, i}
+		{#if content.index > 0}
+		,
+		{/if}
+		{content.title}
 		{/each}
 	</p>
 	<p>total count: {totalCount}</p>
 </div>
 
-
 <script lang="ts">
 	import Counter from './components/Counter.svelte';
 	import AddNewCounter from './components/AddNewCounter.svelte';
-	let options = [
+	let contents = [
 		{
 			index: 0,
 			title: 'new'
 		},
 	];
 
-	let titles = [];
-
 	let totalCount = 0
 	$: if (totalCount < 0) {
-	totalCount = 0;
+		totalCount = 0;
   }
 
-	function updateTitle(value) {
+	function updateTitle(value) 
+	{
 		console.log(value)
 		let index = value.detail.index;
-		options[index].title = value.detail.title;
-		options = options
+		contents[index].title = value.detail.title;
+		contents = contents
 	}
 	
-	function addTotalCount(val :any) {
+	function addTotalCount() 
+	{
 		totalCount += 1;
 	}
 
-	function sutractTotalCount(val :any){
+	function sutractTotalCount() 
+	{
 		totalCount -= 1;
 	}
 
-	function addNewCounter(val) {
-		options.push({
-			index: options.length,
+	function addNewCounter() 
+	{
+		contents.push({
+			index: contents.length,
 			title: 'new'
 		});
-    options = options;
-		console.log('af');
+    contents = contents;
 	}
 
-	function deleteCounter(val :any) 
+	function deleteCounter(val) 
 	{
-		options.splice(val.detail.inx, 1);
-		options = options;
+		console.log(val.detail.inx);
+		contents.splice(val.detail.inx, 1);
+		console.log(contents)
+		contents = contents;
+		totalCount -= val.detail.cnt
+	}
+
+	function resetTotalCount(val) 
+	{
+		totalCount -= val.detail.cnt;
 	}
 </script>
+
+<style>
+	.text-center {
+		text-align: center;
+	}
+</style>
