@@ -2,15 +2,19 @@
 	<h1>Multiple Counter</h1>
 	{#if contents}
 		{#each contents as content, i}	
-		<Counter on:addTotalCount={addTotalCount} index={i} title={content.title} on:deleteCounter={deleteCounter} on:sutractTotalCount={sutractTotalCount} on:updateTitle={updateTitle} on:resetTotalCount={resetTotalCount}/>
+		<Counter on:addTotalCount={addTotalCount} id={content.id} contents={contents} content={content} title={content.title} on:deleteCounter={deleteCounter} on:sutractTotalCount={sutractTotalCount} on:updateTitle={updateTitle} on:resetTotalCount={resetTotalCount}/>
 		{/each}
 	{/if}
 	<AddNewCounter on:addNewCounter={addNewCounter}/>
 	
 	<p>
+		{#if contents.length < 2}
+		title list:
+		{:else}
 		title lists:
+		{/if}
 		{#each contents as content, i}
-		{#if content.index > 0}
+		{#if i > 0}
 		,
 		{/if}
 		{content.title}
@@ -24,8 +28,9 @@
 	import AddNewCounter from './components/AddNewCounter.svelte';
 	let contents = [
 		{
-			index: 0,
-			title: 'new'
+			id: 1,
+			title: 'new',
+			count: 0
 		},
 	];
 
@@ -36,14 +41,15 @@
 
 	function updateTitle(value) 
 	{
-		console.log(value)
 		let index = value.detail.index;
 		contents[index].title = value.detail.title;
 		contents = contents
 	}
 	
-	function addTotalCount() 
+	function addTotalCount(val) 
 	{
+		let index = val.detail.index;
+		contents[index].count = val.detail.cnt;
 		totalCount += 1;
 	}
 
@@ -55,17 +61,21 @@
 	function addNewCounter() 
 	{
 		contents.push({
-			index: contents.length,
-			title: 'new'
+			id: contents.length + 1,
+			title: 'new',
+			count: 0
 		});
     contents = contents;
 	}
 
 	function deleteCounter(val) 
 	{
-		console.log(val.detail.inx);
-		contents.splice(val.detail.inx, 1);
-		console.log(contents)
+		console.log(contents);
+		
+		// console.log(val.detail.inx);
+		let index = contents.findIndex( (element) => element.id === val.detail.id);
+		console.log(index)
+		contents.splice(index, 1);
 		contents = contents;
 		totalCount -= val.detail.cnt
 	}

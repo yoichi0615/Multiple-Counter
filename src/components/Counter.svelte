@@ -1,6 +1,6 @@
 <div class="counter-item">
   <input type="text" bind:value={title} on:keyup="{updateTitle}">
-  <span class="number">{count}</span>
+  <span class="number">{contents[index].count}</span>
   <div>
     <button on:click="{addCount}" class="add">+</button>
     <button on:click="{subtractCount}" class="subtract">-</button>
@@ -14,18 +14,21 @@
   import { createEventDispatcher } from 'svelte';
   const dispatch = createEventDispatcher();
   export let title
-  export let index;
+  export let id;
+  export let contents;
+  export let content
+  let index = contents.findIndex( (element) => element.id === id);
 
   title = 'new';
-	let count= 0;
+	let count = content.count;
 
   function updateTitle() {
-    dispatch('updateTitle', {index: index, title: title});
+    dispatch('updateTitle', {index: index, title: title, cnt: count});
   }
   
   function addCount() :void {
     count++; 
-    dispatch('addTotalCount', { cnt: count });
+    dispatch('addTotalCount', {index: index, cnt: count });
   }
 
   function subtractCount() :void {
@@ -43,7 +46,7 @@
   }
 
   function deleteCounter() {
-    dispatch('deleteCounter', { inx: index, cnt: count });
+    dispatch('deleteCounter', { id: contents[index].id, cnt: contents[index].count });
   }
 </script>
 
