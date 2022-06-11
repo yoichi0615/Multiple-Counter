@@ -1,90 +1,88 @@
-<div class=text-center>
-	<h1>Multiple Counter</h1>
-	{#if contents}
-		{#each contents as content, i}	
-		<Counter on:addTotalCount={addTotalCount} id={content.id} contents={contents} content={content} title={content.title} on:deleteCounter={deleteCounter} on:sutractTotalCount={sutractTotalCount} on:updateTitle={updateTitle} on:resetTotalCount={resetTotalCount}/>
-		{/each}
-	{/if}
-	<AddNewCounter on:addNewCounter={addNewCounter}/>
-	
-	<p>
-		{#if contents.length < 2}
-		title list:
-		{:else}
-		title lists:
-		{/if}
-		{#each contents as content, i}
-		{#if i > 0}
-		,
-		{/if}
-		{content.title}
-		{/each}
-	</p>
-	<p>total count: {totalCount}</p>
-</div>
-
 <script lang="ts">
 	import Counter from './components/Counter.svelte';
 	import AddNewCounter from './components/AddNewCounter.svelte';
-	let contents = [
+
+  type updateEventType = {
+    index: number,
+  	title: string,
+    cnt: number
+  }
+
+  type eventType = {
+    index: number,
+    cnt: number
+  }
+
+	type contentsType = {
+  	title: string,
+  	count: number,
+	};
+
+	let contents: contentsType[]= [
 		{
-			id: 1,
 			title: 'new',
 			count: 0
-		},
+		}
 	];
 
-	let totalCount = 0
-	$: if (totalCount < 0) {
+	let totalCount: number = 0
+	if (totalCount < 0) {
 		totalCount = 0;
   }
 
-	function updateTitle(value) 
-	{
-		let index = value.detail.index;
-		contents[index].title = value.detail.title;
-		contents = contents
+	function updateTitle(value: CustomEvent<updateEventType>): void {
+		contents[value.detail.index].title = value.detail.title;
 	}
 	
-	function addTotalCount(val) 
-	{
-		let index = val.detail.index;
-		contents[index].count = val.detail.cnt;
-		totalCount += 1;
+	function addTotalCount(value: CustomEvent<eventType>): void {
+		contents[value.detail.index].count = value.detail.cnt;
+		totalCount++;
 	}
 
-	function sutractTotalCount() 
-	{
-		totalCount -= 1;
+	function subtractTotalCount(value: CustomEvent<eventType>): void {
+		contents[value.detail.index].count = value.detail.cnt;
+		totalCount--;
 	}
 
-	function addNewCounter() 
-	{
+	function addNewCounter(): void {
 		contents.push({
-			id: contents.length + 1,
 			title: 'new',
 			count: 0
 		});
     contents = contents;
 	}
 
-	function deleteCounter(val) 
-	{
-		console.log(contents);
-		
-		// console.log(val.detail.inx);
-		let index = contents.findIndex( (element) => element.id === val.detail.id);
-		console.log(index)
-		contents.splice(index, 1);
+	function deleteCounter(value: CustomEvent<eventType>): void {
+		contents.splice(value.detail.index, 1);
 		contents = contents;
-		totalCount -= val.detail.cnt
+		totalCount -= value.detail.cnt
 	}
 
-	function resetTotalCount(val) 
-	{
-		totalCount -= val.detail.cnt;
+	function resetTotalCount(value: CustomEvent<eventType>): void {
+		contents[value.detail.index].count = 0;
+		totalCount -= value.detail.cnt;
 	}
 </script>
+
+<div class=text-center>
+	<h1>Multiple Counter</h1>
+	{#if contents}
+		{#each contents as content, i}	
+			<Counter on:addTotalCount={addTotalCount} index={i} content={content} count={content.count} on:deleteCounter={deleteCounter} on:subtractTotalCount={subtractTotalCount} on:updateTitle={updateTitle} on:resetTotalCount={resetTotalCount}/>
+		{/each}
+	{/if}
+	<AddNewCounter on:addNewCounter={addNewCounter}/>
+	<p>
+		title lists:
+		{#each contents as content, i}
+			{content.title}
+		{#if (i + 1 in contents) && contents[i + 1].title !== '' && content.title !== ''}
+			,
+		{/if}
+		{/each}
+	</p>
+	<p>total count: {totalCount}</p>
+</div>
 
 <style>
 	.text-center {
