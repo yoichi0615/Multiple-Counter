@@ -45,14 +45,14 @@
 
   function subtractCount(): void {
     count--
-    if (content.count < 0) {
+    if (count < 0) {
 	    count = 0;
       return;
     }
 
     dispatch('subtractTotalCount', {
       index: index, 
-      cnt: count 
+      cnt: count
     })
   }
 
