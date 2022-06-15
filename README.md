@@ -1,6 +1,15 @@
-# This repo is no longer maintained. Consider using `npm init vite` and selecting the `svelte` option or — if you want a full-fledged app framework and don't mind using pre-1.0 software — use [SvelteKit](https://kit.svelte.dev), the official application framework for Svelte.
+## URL
 
----
+https://master.dkjcokgnzx6bq.amplifyapp.com/
+
+
+## システム要件
+
+・カウントのプラス、マイナス、リセットができる<br>
+・カウンター自体を増やせる。削除できる<br>
+・それぞれのカウンターに入力欄があり、タイトルを入力できる<br>
+・複数のカウンターの合計値が表示される
+
 
 # svelte app
 
