@@ -1,6 +1,6 @@
 ## URL
 
-https://master.dkjcokgnzx6bq.amplifyapp.com/
+<a href="http://stackoverflow.com" target="_blank">https://master.dkjcokgnzx6bq.amplifyapp.com/</a>
 
 
 ## システム要件
